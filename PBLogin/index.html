@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A fül neve</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" charset="UTF-8">
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Work+Sans:300&subset=latin-ext');
+      html, body {
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+        color: white;
+        font-size: 50px;
+        font-family: 'Work sans';
+      }
+      .hatter {
+        background-image: url("hatter.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+      .pirosvonal {
+        border: 1px solid red;
+      }
+      .vkozepre {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+        margin-right: -50%;
+      }
+      .fkozepre {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        margin-bottom: -50%;
+      }
+      .tokkozepre {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin-right: -50%;
+        margin-bottom: -50%;
+      }
+      .cim {
+        text-align: center;
+      }
+      .videomeret {
+        width: auto;
+        height: auto;
+        min-width: 100%;
+        min-height: 100%;
+        pointer-events: none;
+
+      }
+      .fejlec {
+        font-family: arial;
+        font-size: 16px;
+      }
+      .lablec {
+        font-family: arial;
+        font-size: 16px;
+        bottom: 0;
+      }
+      a {
+        color: white;
+        text-decoration: none;
+      }
+      .gomb {
+        background-color: rgba(0, 0, 0, 0.5);
+        font-family: arial;
+        font-size: 16px;
+        padding: 10px;
+//        opacity: 0.5;
+        width: 150px;
+        display: inline-block;
+      }
+      .gomb:hover {
+        filter: invert(100%);
+        transition-duration: 0.5s;
+      
+      }
+      @media (max-width: 767px) {
+
+	.fejlec {
+          display: none;
+        }
+        .mobilonne {
+          display: none;
+        }
+      @media (max-height: 450px) {
+
+
+      }
+
+    </style>
+  </head>
+  <body class="hatter">
+    <video autoplay loop muted poster="hatter.jpg" class="tokkozepre videomeret mobilonne">
+      <source src="hatter.mp4" type="video/mp4">
+    </video>
+    
+    <div class="fejlec vkozepre">
+      <a href="http://www.disney.com">Dizniiiií!</a>
+      <a href="http://index.hu">Index</a>
+      <a href="http://www.nailyenaztannincs.ko">Semmi!</a>
+    </div>
+    <div class="tokkozepre cim">Árvíztűrő tükörfúrógép
+      <div>
+      <a class="gomb" href="http://www.disney.com">Dizniiiií!</a>
+      <a class="gomb" href="http://index.hu">Index</a>
+      <a class="gomb" href="http://www.nailyenaztannincs.ko">Semmi!</a>
+      </div>
+    </div>
+<div class="lablec vkozepre">
+&copy; 1998-<span id="year"></span> Minden jog fenntartva
+</div>
+<script>
+        var d = new Date();
+        var n = d.getFullYear();
+        document.getElementById("year").innerHTML = n;
+</script>
+  </body>
+</html>
