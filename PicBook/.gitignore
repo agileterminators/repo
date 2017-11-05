@@ -1,0 +1,15 @@
+packages/*
+PicBook.Repository.EntityFramework/bin/*
+PicBook.Repository.EntityFramework/obj/*
+PicBook.ApplicationService/bin/*
+PicBook.ApplicationService/obj/*
+PicBook.Domain/bin/*
+PicBook.Domain/obj/*
+PicBook.Web/bin/*
+PicBook.Web/obj/*
+PicBook.Dto/bin/*
+PicBook.Dto/obj/*
+PicBook.WebJob/bin/*
+PicBook.WebJob/obj/*
+PicBook.Repository.AzureStorage/bin/*
+PicBook.Repository.AzureStorage/obj/*
