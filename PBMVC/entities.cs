@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 
 namespace PicBook
@@ -54,9 +53,8 @@ namespace PicBook
 
         [Column("tag_name")]
         public string tagname { get; set; }
-
+        [Column("image_id")]
         public Image image { get; set; }
-
 
     }
 
@@ -90,13 +88,22 @@ namespace PicBook
     [Table("Sharerelation")]
     public class Sharerelation
     {
+        [Key]
         [Column("userid")]
         public User user { get; set; }
 
+        [Key]
         [Column("albumid")]
         public Album album { get; set; }
 
-    
+        public Sharerelation() { }
+
+        public Sharerelation(User user, Album album)
+        {
+            this.album = album;
+            this.user = user;
+        }
+
     }
 
     [Table("pbookers")]
@@ -116,8 +123,6 @@ namespace PicBook
 
         [InverseProperty("user")]
         public ICollection<Sharerelation> SharedWith { get; set; }
-
-
 
     }
 }
