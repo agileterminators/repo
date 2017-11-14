@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,22 @@ namespace PBMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(cookie =>
+                {
+                    cookie.LoginPath = new PathString("/Account/Login");
+                    cookie.LogoutPath = new PathString("/Home/Index");
+                })
+                .AddFacebook(facebookOptions => 
+                {
+                    facebookOptions.AppId = "846498688864390"; //Configuration["Authentication:Facebook:AppId"]; //846498688864390
+                    facebookOptions.AppSecret = "309cbba7af188f815224b9d82f80c9fb"; //Configuration["Authentication:Facebook:AppSecret"]; //309cbba7af188f815224b9d82f80c9fb
+                    facebookOptions.Scope.Add("email");
+                    facebookOptions.Fields.Add("name");
+                    facebookOptions.Fields.Add("email");
+                    facebookOptions.SaveTokens = true;
+                });
+
             services.AddMvc();
         }
 
@@ -40,6 +58,8 @@ namespace PBMVC
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseAuthentication();
 
             app.UseStaticFiles();
 
