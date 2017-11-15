@@ -32,8 +32,8 @@ namespace PBMVC
                 })
                 .AddFacebook(facebookOptions => 
                 {
-                    facebookOptions.AppId = "846498688864390"; //Configuration["Authentication:Facebook:AppId"]; //846498688864390
-                    facebookOptions.AppSecret = "309cbba7af188f815224b9d82f80c9fb"; //Configuration["Authentication:Facebook:AppSecret"]; //309cbba7af188f815224b9d82f80c9fb
+                    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"]; //846498688864390
+                    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"]; //309cbba7af188f815224b9d82f80c9fb
                     facebookOptions.Scope.Add("email");
                     facebookOptions.Fields.Add("name");
                     facebookOptions.Fields.Add("email");
