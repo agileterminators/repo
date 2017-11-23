@@ -6,46 +6,56 @@ using Microsoft.EntityFrameworkCore;
 using PicBook;
 
 
-namespace PBMVC.Controllers.Services
+namespace PBMVC.Controllers.Services.Impl
 {
-    public class AlbumService : DbContext
+    public class AlbumServiceImpl : DbContext, IAlbumService
     {
         private DbSet<Album> Albums { get; set; }
 
         private DbSet<Sharerelation> Shares { get; set; }
 
-        public Album GetAlbumById(Guid id) {
+        public Album GetAlbumById(Guid id)
+        {
             return Albums.Find(id);
         }
-        public void EditAlbum(Album album) {
+
+        public void EditAlbum(Album album)
+        {
             Entry(album).State = EntityState.Modified;
 
             SaveChanges();
         }
-        public void CreateAlbum(Album album) {
+        public void CreateAlbum(Album album)
+        {
             Albums.Add(album);
             SaveChanges();
         }
-        public void DeleteAlbum(Album album) {
+
+        public void DeleteAlbum(Album album)
+        {
             Albums.Remove(album);
             SaveChanges();
         }
-        public void ShareAlbum(Album album, User user) {
-            Shares.Add(new Sharerelation(user,album));
+
+        public void ShareAlbum(Album album, User user)
+        {
+            Shares.Add(new Sharerelation(user, album));
 
             SaveChanges();
         }
 
-        public void RevokeShare(Album album, User user) {
+        public void RevokeShare(Album album, User user)
+        {
             Sharerelation share = Shares.Find(album, user);
 
             Shares.Remove(share);
             SaveChanges();
         }
+
         public IEnumerable<Album> ListAlbumsByUser(User user)
         {
             return Albums.Where((x => x.Owner == user));
         }
-        
+
     }
 }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using  Microsoft.AspNetCore.Mvc;
 using System.IO;
 
-namespace PBMVC.Controllers.Services
+namespace PBMVC.Controllers.Services.Impl
 {
-    public class FileService: Controller
+    public class FileServiceImpl : Controller, IFileService
     {
         string foldername = "C:\\pbook"; //need to be implemented 
 

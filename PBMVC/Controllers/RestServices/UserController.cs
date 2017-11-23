@@ -10,12 +10,13 @@ namespace PBMVC.Controllers.RestServices
 {
     public class UserController: Controller
     {
-        private UserService userService;
-        public UserController(UserService userService)
+        private IUserService userService;
+        public UserController(IUserService userService)
         {
             this.userService = userService;
 
         }
+
         [HttpGet]
         public User GetUserInfo([FromQuery] Guid userID)
         {
@@ -29,8 +30,8 @@ namespace PBMVC.Controllers.RestServices
             }
 
             return null;
-             
         }
+
         [HttpPost]
         public void EditUser([FromBody]User user)
         {
@@ -41,6 +42,8 @@ namespace PBMVC.Controllers.RestServices
                 oldUser.BirthDate = user.BirthDate;
                 oldUser.Email = user.Email;
                 userService.EditUser(oldUser);
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
     }

@@ -7,15 +7,15 @@ using PicBook;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace PBMVC.Controllers.Services
+namespace PBMVC.Controllers.Services.Impl
 {
-    public class UserService:DbContext
+    public class UserServiceImpl: DbContext, IUserService
     {
 
         private const String LOGGED_IN_USER = "LOGGED_IN_USER";
 
         private DbSet<User> Users { get; set; }
-
+        
         public User GetUserById(Guid userid) {
             return Users.Find(userid);
         }

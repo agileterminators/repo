@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PicBook;
  
-namespace PBMVC.Controllers.Services
+namespace PBMVC.Controllers.Services.Impl
 {
-    public class ImageService: DbContext 
+    public class ImageServiceImpl: DbContext, IImageService
     {
 
         private DbSet<Image> Images { get; set;  }

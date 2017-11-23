@@ -78,10 +78,24 @@ namespace PicBook
         /* Empty if Visibility is Private or Public */
         [InverseProperty("album")]
         public ICollection<Sharerelation> SharedWith { get; set; }
-        
 
         public User Owner { get; set; }
 
+        public Album() {
+            Visibility = Visibility.Private;
+            this.SharedWith = new List<Sharerelation>();
+        }
+        public Album(Guid id, string name) {
+            this.ID = id;
+            this.Title = name;
+            this.SharedWith = new List<Sharerelation>();
+            Visibility = Visibility.Private;
+        }
+
+        public void ShareWith(User user) {
+            this.Visibility = Visibility.Shared;
+            this.SharedWith.Add(new Sharerelation(user,this));
+        }
 
     }
 
@@ -124,5 +138,12 @@ namespace PicBook
         [InverseProperty("user")]
         public ICollection<Sharerelation> SharedWith { get; set; }
 
+        public User() {}
+
+        public User(Guid id, string name, string email) {
+            this.ID = id;
+            this.Name = name;
+            this.Email = email;
+        }
     }
 }

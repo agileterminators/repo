@@ -12,18 +12,23 @@ namespace PBMVC.Controllers.RestServices
     public class AlbumController : Controller
     {
 
-        private AlbumService albumService;
-        private UserService userService;
+        private IAlbumService albumService;
+        private IUserService userService;
 
-        public AlbumController(AlbumService albumService, UserService userService) {
+        public AlbumController(IAlbumService albumService, IUserService userService) {
             this.albumService = albumService;
             this.userService = userService;
         }
 
         [HttpPost]
         public void Create([FromBody] Album album) {
-            album.Owner = userService.LoggedIn(HttpContext);
-            albumService.CreateAlbum(album);
+            User user = userService.LoggedIn(HttpContext);
+            if (user == null) {
+                album.Owner = user;
+                albumService.CreateAlbum(album);
+            } else {
+                throw new OperationNotPermittedException();
+            }
         }
 
         [HttpGet]
@@ -34,16 +39,38 @@ namespace PBMVC.Controllers.RestServices
 
             if (album == null)
             {
-                return null;
+                throw new OperationNotPermittedException();
             }
 
-            if (album.Visibility == Visibility.Public || (album.Visibility == Visibility.Shared && album.SharedWith.Any(x => x.user == userService.LoggedIn(HttpContext))))
+            if (album.Visibility == Visibility.Public
+                || (album.Visibility == Visibility.Shared
+                && album.SharedWith.Any(x => x.user == userService.LoggedIn(HttpContext))))
             {
                 return album.Images;
+            } else {
+                throw new OperationNotPermittedException();
+            }
+        }
+
+        [HttpGet]
+        [Route("/album")]
+        public Album GetAlbum([FromQuery] String albumid) {
+            Album album = albumService.GetAlbumById(new Guid(albumid));
+
+            if (album == null)
+            {
+                throw new OperationNotPermittedException();
             }
 
-            return null;
-        }
+            if (album.Visibility == Visibility.Public
+                || (album.Visibility == Visibility.Shared
+                && album.SharedWith.Any(x => x.user == userService.LoggedIn(HttpContext)))){
+                    return album;
+            } else {
+                throw new OperationNotPermittedException();
+            }
+         }
+
 
         [HttpGet]
         [Route("/albums")]
@@ -54,6 +81,8 @@ namespace PBMVC.Controllers.RestServices
             Album album = albumService.GetAlbumById(new Guid(albumId));
             if (album != null && album.Owner == userService.LoggedIn(HttpContext)) {
                 albumService.DeleteAlbum(album);
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
 
@@ -76,6 +105,8 @@ namespace PBMVC.Controllers.RestServices
             if (album.Owner == userService.LoggedIn(HttpContext)) {
                 User user = userService.GetUserById(new Guid(userId));
                 albumService.ShareAlbum(album, user);
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
 
@@ -87,6 +118,8 @@ namespace PBMVC.Controllers.RestServices
             {
                 User user = userService.GetUserById(new Guid(userId));
                 albumService.RevokeShare(album, user);
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
     }

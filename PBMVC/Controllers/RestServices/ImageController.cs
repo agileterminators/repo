@@ -12,12 +12,12 @@ namespace PBMVC.Controllers.RestServices
     public class PictureController:Controller
     {
 
-        private UserService userService;
-        private ImageService imageService;
-        private FileService fileService;
-        private AlbumService albumService;
+        private IUserService userService;
+        private IImageService imageService;
+        private IFileService fileService;
+        private IAlbumService albumService;
 
-        public PictureController(UserService userService, ImageService imageService, FileService fileService, AlbumService albumService)
+        public PictureController(IUserService userService, IImageService imageService, IFileService fileService, IAlbumService albumService)
         {
             this.fileService = fileService;
             this.imageService = imageService;
@@ -29,14 +29,15 @@ namespace PBMVC.Controllers.RestServices
         public byte[] GetImageByID([FromQuery] Guid id)
         {
             Image image = imageService.GetImageById(id);
-            if (image!= null && (image.album.SharedWith.Any(x => x.user==userService.LoggedIn(HttpContext)) || image.album.Visibility == Visibility.Public))
+            if (image!= null && (image.album.SharedWith.Any(x => x.user==userService.LoggedIn(HttpContext))
+                || image.album.Visibility == Visibility.Public))
             {
                 return fileService.ReadFile(image.FilePath);
-            }
-            return null;
-
-            
+            } else {
+                throw new OperationNotPermittedException();
+            }  
         }
+
         [HttpPost]
         public void Upload([FromBody] byte[] bytes, [FromQuery] String title, [FromQuery] String albumId) {
             Album album = albumService.GetAlbumById(new Guid(albumId));
@@ -49,10 +50,12 @@ namespace PBMVC.Controllers.RestServices
                 fileService.SaveFile(guid.ToString(), bytes);
                 imageService.CreateImage(image);
                 album.Images.Add(image);
-                albumService.EditAlbum(album);
-                   
+                albumService.EditAlbum(album);   
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
+
         [HttpDelete]
         public void Delete([FromQuery]Guid imageId)
         { 
@@ -61,9 +64,11 @@ namespace PBMVC.Controllers.RestServices
             {
                 imageService.DeleteImage(image);
                 fileService.DeleteFile(image.FilePath);
-
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
+
         [HttpPut]
         public void edit([FromBody] Image image)
         {
@@ -72,11 +77,10 @@ namespace PBMVC.Controllers.RestServices
             {
                 oldimg.Title = image.Title;
                 imageService.EditImage(oldimg);
-                
+            } else {
+                throw new OperationNotPermittedException();
             }
         }
-
-
 
     }
 }
