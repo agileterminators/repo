@@ -33,9 +33,9 @@ namespace PBMVC.Controllers.RestServices
 
         [HttpGet]
         [Route("/images")]
-        public ICollection<Image> ListImages([FromQuery] String albumid) {
+        public ICollection<Image> ListImages([FromQuery] String albumId) {
 
-            Album album = albumService.GetAlbumById(new Guid(albumid));
+            Album album = albumService.GetAlbumById(new Guid(albumId));
 
             if (album == null)
             {
@@ -54,8 +54,8 @@ namespace PBMVC.Controllers.RestServices
 
         [HttpGet]
         [Route("/album")]
-        public Album GetAlbum([FromQuery] String albumid) {
-            Album album = albumService.GetAlbumById(new Guid(albumid));
+        public Album GetAlbum([FromQuery] String albumId) {
+            Album album = albumService.GetAlbumById(new Guid(albumId));
 
             if (album == null)
             {
@@ -74,7 +74,21 @@ namespace PBMVC.Controllers.RestServices
 
         [HttpGet]
         [Route("/albums")]
-        public ICollection<Album> ListAlbums([FromQuery] String userid) { return null;  }
+        public IEnumerable<Album> ListAlbums([FromQuery] Guid userId) {
+            User user = userService.GetUserById(userId);
+
+            if (user == null) {
+                throw new OperationNotPermittedException();
+            }
+
+            User loggedin = userService.LoggedIn(HttpContext);
+
+            if (loggedin == null) {
+                return user.Albums.Where(x => (x.Visibility == Visibility.Public));
+            } else {
+                return user.Albums.Where(x => ( (x.Visibility == Visibility.Public) || x.SharedWith.Any(y=>(y.user == loggedin))));
+            }
+        }
 
         [HttpDelete]
         public void Delete([FromQuery] String albumId) {

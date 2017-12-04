@@ -8,6 +8,7 @@ using PBMVC.Controllers.Services;
 
 namespace PBMVC.Controllers.RestServices
 {
+    [Route("api/[controller]")]
     public class UserController: Controller
     {
         private IUserService userService;
@@ -18,14 +19,13 @@ namespace PBMVC.Controllers.RestServices
         }
 
         [HttpGet]
-        public User GetUserInfo([FromQuery] Guid userID)
+        public User GetUserInfo([FromQuery] Guid userId)
         {
 
-            User user = userService.GetUserById(userID);
+            User user = userService.GetUserById(userId);
             if (user != null && user.IsActive)
             {
                 user.UserIdentifier = null;
-                user.SharedWith = null;
                 return user;
             }
 

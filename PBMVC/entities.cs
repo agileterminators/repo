@@ -135,8 +135,8 @@ namespace PicBook
         [Column("Birthdate")]
         public DateTime BirthDate { get; set; }
 
-        [InverseProperty("user")]
-        public ICollection<Sharerelation> SharedWith { get; set; }
+        [InverseProperty("Owner")]
+        public ICollection<Album> Albums { get; set; }
 
         public User() {}
 
