@@ -9,6 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
+using PBMVC.Controllers.Services;
+using PBMVC.Controllers.Services.Impl;
 
 namespace PBMVC
 {
@@ -41,6 +47,13 @@ namespace PBMVC
                 });
 
             services.AddMvc();
+
+            String connectionString = Configuration["StorageConnectionString"];
+
+            services.AddScoped<IAlbumService>(r => new AlbumServiceImpl(connectionString));
+            services.AddScoped<IImageService>(r => new ImageServiceImpl(connectionString));
+            services.AddScoped<IUserService>(r => new UserServiceImpl(connectionString));
+            services.AddScoped<IFileService>(r => new FileServiceImpl());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

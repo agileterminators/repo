@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PicBook;
 using PBMVC.Controllers.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PBMVC.Controllers.RestServices
 {
@@ -32,6 +33,7 @@ namespace PBMVC.Controllers.RestServices
             return null;
         }
 
+        [Authorize]
         [HttpPost]
         public void EditUser([FromBody]User user)
         {

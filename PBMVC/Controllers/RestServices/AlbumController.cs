@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PicBook;
 using PBMVC.Controllers.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PBMVC.Controllers.RestServices
 {
@@ -20,6 +21,7 @@ namespace PBMVC.Controllers.RestServices
             this.userService = userService;
         }
 
+        [Authorize]
         [HttpPost]
         public void Create([FromBody] Album album) {
             User user = userService.LoggedIn(HttpContext);
@@ -90,6 +92,7 @@ namespace PBMVC.Controllers.RestServices
             }
         }
 
+        [Authorize]
         [HttpDelete]
         public void Delete([FromQuery] String albumId) {
             Album album = albumService.GetAlbumById(new Guid(albumId));
@@ -112,6 +115,7 @@ namespace PBMVC.Controllers.RestServices
         }
         */
 
+        [Authorize]
         [Route("/share-with")]
         [HttpPost]
         public void ShareWith([FromQuery]String albumId, [FromQuery]String userId) {
@@ -124,6 +128,7 @@ namespace PBMVC.Controllers.RestServices
             }
         }
 
+        [Authorize]
         [Route("/revoke-share")]
         [HttpPost]
         public void RevokeShare([FromQuery]String albumId, [FromQuery]String userId) {

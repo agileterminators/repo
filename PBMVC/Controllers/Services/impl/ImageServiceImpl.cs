@@ -4,28 +4,49 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PicBook;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
  
 namespace PBMVC.Controllers.Services.Impl
 {
-    public class ImageServiceImpl: DbContext, IImageService
+    public class ImageServiceImpl: Controller, IImageService
     {
 
-        private DbSet<Image> Images { get; set;  }
+        public ImageServiceImpl(String connectionString) {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            Images = tableClient.GetTableReference("image");
 
-        public Image GetImageById(Guid id) {
-            return Images.Find(id);
+            Images.CreateIfNotExistsAsync();
         }
+
+        private CloudTable Images;
+
+        public Image GetImageById(Guid id)
+        {
+            TableQuery<Image> projectionQuery = new TableQuery<Image>().Where(
+                TableQuery.GenerateFilterCondition("id", QueryComparisons.Equal, id.ToString()));
+
+            return Images.ExecuteQuerySegmentedAsync<Image>(projectionQuery, null).Result.First();
+        }
+
         public void EditImage(Image image) {
-            Entry(image).State = EntityState.Modified;
-            SaveChanges();
+            TableOperation updateOperation = TableOperation.Replace(image);
+            Images.ExecuteAsync(updateOperation);
         }
+
         public void CreateImage(Image image) {
-            Images.Add(image);
-            SaveChanges();
+            TableOperation insertOperation = TableOperation.Insert(image);
+
+            Images.ExecuteAsync(insertOperation);
         }
+
         public void DeleteImage(Image image) {
-            Images.Remove(image);
-            SaveChanges();
+            TableOperation deleteOperation = TableOperation.Delete(image);
+
+            Images.ExecuteAsync(deleteOperation);
         }
 
     }

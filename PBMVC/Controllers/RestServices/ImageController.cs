@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PicBook;
 using PBMVC.Controllers.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PBMVC.Controllers.RestServices
 {
@@ -38,6 +39,7 @@ namespace PBMVC.Controllers.RestServices
             }  
         }
 
+        [Authorize]
         [HttpPost]
         public void Upload([FromBody] byte[] bytes, [FromQuery] String title, [FromQuery] String albumId) {
             Album album = albumService.GetAlbumById(new Guid(albumId));
@@ -56,6 +58,7 @@ namespace PBMVC.Controllers.RestServices
             }
         }
 
+        [Authorize]
         [HttpDelete]
         public void Delete([FromQuery]Guid imageId)
         { 
@@ -69,6 +72,7 @@ namespace PBMVC.Controllers.RestServices
             }
         }
 
+        [Authorize]
         [HttpPut]
         public void edit([FromBody] Image image)
         {

@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace PicBook
 {
 
-    public abstract class Entity
+    public abstract class Entity: TableEntity
     {
         [Key]
         public Guid ID { get; set; }
@@ -24,9 +26,7 @@ namespace PicBook
 
         [Column("created")]
         public DateTime Created { get; set; }
-
     }
-
 
     [Table("image")]
     public class Image : Entity
@@ -100,7 +100,7 @@ namespace PicBook
     }
 
     [Table("Sharerelation")]
-    public class Sharerelation
+    public class Sharerelation : TableEntity
     {
         [Key]
         [Column("userid")]
